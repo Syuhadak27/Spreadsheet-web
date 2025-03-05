@@ -26,8 +26,10 @@ export async function handleSearch(request, env) {
     results.forEach(row => {
       resultHtml += `
         <div class="result-card">
-          <strong>${row[0]} • ${row[1]} • ${row[2]} • ${row[3]} • ${row[4]}</strong> <br>
-           
+          <strong onclick="copyToClipboard('${row[1]}')" style="cursor: pointer; color: inherit;">
+            ${row[1]}
+          </strong> <br>
+            ${row[0]} • ${row[2]} • ${row[3]} • ${row[4]}                     
         </div>`;
     });
     resultHtml += `</div>`;
@@ -50,16 +52,18 @@ export async function handleSearch(request, env) {
   }
   .container {
     max-width: 600px; margin: auto; padding: 20px;
-    background: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: #fff; box-shadow: 0 8px 20px rgba(214, 17, 17, 0.3);
     border-radius: 10px;
   }
   h1 { color: #007bff; }
+  font-size: 24px;
   hr { border: none; height: 2px; background: #007bff; margin: 20px 0; }
   .results { text-align: left; }
   .result-card {
     background: #e9f5ff; padding: 10px;
     border-radius: 5px; margin: 30px 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+     width: auto;
   }
   a {
     display: block; margin-top: 20px;
@@ -94,7 +98,36 @@ export async function handleSearch(request, env) {
         ${resultHtml}
         <a href="/">🔙 Kembali ke Pencarian</a>
       </div>
+    <script>
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+          showNotification("Teks berhasil disalin!");
+        }).catch(err => {
+          console.error("Gagal menyalin teks", err);
+        });
+      }
+    </script>
+
     </body>
     </html>
   `, { headers: { "Content-Type": "text/html" } });
+}
+
+function showNotification(message) {
+  let notification = document.createElement("div");
+  notification.innerText = message;
+  notification.style.position = "fixed";
+  notification.style.bottom = "20px";
+  notification.style.right = "20px";
+  notification.style.background = "rgba(0, 0, 0, 0.8)";
+  notification.style.color = "white";
+  notification.style.padding = "10px 20px";
+  notification.style.borderRadius = "5px";
+  notification.style.fontSize = "14px";
+  notification.style.zIndex = "1000";
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+      notification.remove();
+  }, 2000); // Notifikasi hilang setelah 2 detik
 }
