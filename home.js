@@ -67,13 +67,13 @@ export function handleHome() {
     <form id="searchForm" action="/search" method="GET">
       <input type="text" id="queryInput" name="query" placeholder="Masukkan kata kunci..." required>
       <br>
-      <button type="submit">Cari</button>
+      <button type="submit" class="btn-search">Cari</button>
     </form>
 
     <!-- Form INOUT -->
     <form id="inoutForm" action="/inout" method="GET">
       <input type="hidden" id="queryInout" name="query">
-      <button type="submit" onclick="copyQuery()">INOUT</button>
+      <button type="submit" class="btn-inout" onclick="copyQuery()">INOUT</button>
     </form>
   </div>
 
