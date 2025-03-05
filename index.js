@@ -1,5 +1,6 @@
-import { handleHome } from "./handlers/home";
-import { handleSearch } from "./handlers/search";
+import { handleHome } from "./home";
+import { handleSearch } from "./search";
+import { handleSearch_inout } from "./inout";
 import { notFound } from "./routes";
 
 export default {
@@ -8,6 +9,7 @@ export default {
 
     if (url.pathname === "/") return handleHome();
     if (url.pathname === "/search") return handleSearch(request, env);
+    if (url.pathname === "/inout") return handleSearch_inout(request, env);
 
     return notFound();
   },
