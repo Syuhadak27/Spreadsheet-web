@@ -8,6 +8,11 @@ export function getResultsPage(title, query, resultHtml) {
     <title>${title}</title>
     <style>
       body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
         font-family: Arial, sans-serif;
         text-align: center;
         padding: 50px;
@@ -49,8 +54,9 @@ export function getResultsPage(title, query, resultHtml) {
          color: red;
       }
       .container {
+        width: 100%; 
         max-width: 600px;
-        margin: auto;
+        margin: 0 auto;
         padding: 20px;
         background: #fff;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

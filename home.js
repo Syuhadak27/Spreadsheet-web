@@ -26,10 +26,10 @@ export function handleHome() {
           hr { border: none; height: 2px; background: #007bff; margin: 20px 0; }
           
           .search-container {
-            position: relative;
             display: flex;
             align-items: center;
             width: 100%;
+            gap: 5px;
           }
           
           input {
@@ -41,31 +41,35 @@ export function handleHome() {
             border-radius: 5px;
           }
           
-          .clear-btn {
-            position: absolute;
-            right: 10px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-size: 18px;
-            color: #888;
-          }
-          
-          .clear-btn:hover {
-            color: red;
+          .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
           }
 
           button {
             padding: 10px 15px;
-            margin-top: 10px;
             border: none;
-            background: #007bff;
-            color: white;
             border-radius: 5px;
             cursor: pointer;
+            font-weight: bold;
           }
-          
-          button:hover { background: #0056b3; }
+
+          /* Warna tombol */
+          .btn-clear { background: pink; color: white; }
+          .btn-clear:hover { background: darkred; }
+
+          .btn-search { background: green; color: white; }
+          .btn-search:hover { background: darkgreen; }
+
+          .btn-inout {
+            background: linear-gradient(45deg, yellow, orange);
+            color: black;
+          }
+          .btn-inout:hover {
+            background: linear-gradient(45deg, orange, darkorange);
+          }
 
           /* DARK MODE */
           @media (prefers-color-scheme: dark) {
@@ -84,11 +88,11 @@ export function handleHome() {
               color: #e0e0e0;
               border: 1px solid #555;
             }
-            button {
-              background: #8ab4f8;
-              color: black;
+            .btn-clear { background: darkred; }
+            .btn-search { background: darkgreen; }
+            .btn-inout {
+              background: linear-gradient(45deg, darkgoldenrod, darkorange);
             }
-            button:hover { background: #5a94e5; }
           }
         </style>
       </head>
@@ -106,41 +110,41 @@ export function handleHome() {
           <form id="searchForm" action="/search" method="GET">
             <div class="search-container">
               <input type="text" id="queryInput" name="query" placeholder="●──𝐌ᴀsᴜᴋᴋᴀɴ 𝐍ᴀᴍᴀ 𝐁ᴀʀᴀɴɢ...ツ ™" required>
-               
-              
             </div>
-            <button type="button" class="btn-search" onclick="clearSearch()">❌</button>
-            <button type="submit" class="btn-search">Cari</button>
+
+            <div class="btn-container">
+              <button type="button" class="btn-clear" onclick="clearSearch()">Clear</button>
+              <button type="submit" class="btn-search">Cari</button>
+              <button type="button" class="btn-inout" onclick="copyQuery()">Inout</button>
+            </div>
           </form>
 
-          <!-- Form INOUT -->
-          <form id="inoutForm" action="/inout" method="GET">
-            <input type="hidden" id="queryInout" name="query">
-            <button type="submit" class="btn-inout" onclick="copyQuery()">Inout</button>
-          </form>
         </div>
 
         <script>
           function copyQuery() {
-            // Salin nilai dari input pencarian ke form INOUT
-            document.getElementById('queryInout').value = document.getElementById('queryInput').value;
+            let query = document.getElementById('queryInput').value;
+            if (query.trim() !== "") {
+              window.location.href = \`/inout?query=\${encodeURIComponent(query)}\`;
+            } else {
+              alert("Masukkan nama barang terlebih dahulu!");
+            }
           }
 
           function clearSearch() {
             document.getElementById('queryInput').value = "";
           }
-          
-        async function pasteText() {
-          try {
-             const text = await navigator.clipboard.readText();
-            document.getElementById('query').value = text;
-          } catch (err) {
-            alert('Gagal mengambil teks dari clipboard!');
+
+          async function pasteText() {
+            try {
+              const text = await navigator.clipboard.readText();
+              document.getElementById('queryInput').value = text;
+            } catch (err) {
+              alert('Gagal mengambil teks dari clipboard!');
+            }
           }
-        }
         </script>
       </body>
-
       </html>
     `, { headers: { "Content-Type": "text/html" } });
 }
