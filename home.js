@@ -79,7 +79,7 @@ export function handleHome() {
     <!-- Form INOUT -->
     <form id="inoutForm" action="/inout" method="GET">
       <input type="hidden" id="queryInout" name="query">
-      <button type="submit" class="btn-inout" onclick="copyQuery()">INOUT</button>
+      <button type="submit" class="btn-inout" onclick="copyQuery()">Inout</button>
     </form>
   </div>
 
