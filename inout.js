@@ -1,6 +1,6 @@
 import { getFromKV_inout, saveToKV_inout } from "./cache";
 import { getCachedData_inout } from "./sheets";
-import { getResultsPage } from "./templates"; // Pakai template yang sama
+import { getResultsPage } from "./templates"; // Gunakan template tampilan yang sama
 
 export async function handleSearch_inout(request, env) {
   const url = new URL(request.url);
@@ -19,21 +19,46 @@ export async function handleSearch_inout(request, env) {
     keywords.every(keyword => row.some(cell => String(cell).toLowerCase().includes(keyword)))
   );
 
-  let resultHtml = "";
   if (results.length === 0) {
-    resultHtml = `<p style="color: red;">❌ Tidak ada hasil ditemukan.</p>`;
-  } else {
-    resultHtml = `<div class="results">`;
-    results.forEach(row => {
-      resultHtml += `
-        <div class="result-card">
-          ${row[0]} • ${row[1]} • ${row[2]} • ${row[3]} • ${row[4]} • ${row[5]}
-        </div>`;
-    });
-    resultHtml += `</div>`;
+    return new Response(
+      getResultsPage("Hasil INOUT", query, `<p style="color: red;">❌ Tidak ada hasil ditemukan.</p>`),
+      { headers: { "Content-Type": "text/html" } }
+    );
   }
 
-  return new Response(getResultsPage("Hasil INOUT", query, resultHtml), {
+  let totalMasuk = 0;
+  let totalKeluar = 0;
+  let sumByName = {};
+
+  let resultHtml = `<div class="results">`;
+  results.forEach(row => {
+    let masuk = parseInt(row[3]?.replace(/\D/g, ""), 10) || 0;
+    let keluar = parseInt(row[4]?.replace(/\D/g, ""), 10) || 0;
+    let name = row[5]?.trim() || "Tanpa Nama";
+
+    totalMasuk += masuk;
+    totalKeluar += keluar;
+    sumByName[name] = (sumByName[name] || 0) + keluar;
+
+    resultHtml += `
+      <div class="result-card">
+        <code>${row[0]}</code> • <code>${row[1]}</code> • ${row[2]} • ${row[3]} • ${row[4]} • ${name}
+      </div>`;
+  });
+  resultHtml += `</div>`;
+
+  const totalTersisa = totalMasuk - totalKeluar;
+  const sumByNameText = Object.entries(sumByName)
+    .filter(([_, total]) => total > 0)
+    .map(([name, total]) => `<li>${name}: ${total} pcs</li>`)
+    .join("");
+
+  let summaryHtml = `
+    <div class="summary">
+      <p>🟢 Masuk: ${totalMasuk} pcs • 🔴 Keluar: ${totalKeluar} pcs • 🟡 Tersisa: ${totalTersisa} pcs</p>
+    </div>`;
+
+  return new Response(getResultsPage("Hasil INOUT", query, summaryHtml + resultHtml), {
     headers: { "Content-Type": "text/html" },
   });
 }

@@ -14,6 +14,40 @@ export function getResultsPage(title, query, resultHtml) {
         background: #f4f7f6;
         color: #333;
       }
+      .search-container {
+        display: flex;
+        align-items: center; /* Pusatkan vertikal */
+        gap: 5px; /* Beri jarak antar elemen */
+      }
+      .search-container input {
+        flex: 1; /* Agar input memenuhi sisa ruang */
+        padding: 10px;
+      }
+      .clear-btn {
+        background: none; /* Hapus background */
+        border: none; /* Hapus border */
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .summary p {
+         margin: 2px 0; 
+         padding: 0; 
+         font-size: 14px; 
+      }
+      .clear-btn {
+         position: absolute;
+         right: 10px;
+         cursor: pointer;
+         background: none;
+         border: none;
+         font-size: 15px;
+         color: #888;
+         outline: none;
+         padding: 0;
+      }
+      .clear-btn:hover {
+         color: red;
+      }
       .container {
         max-width: 600px;
         margin: auto;
@@ -129,6 +163,7 @@ export function getResultsPage(title, query, resultHtml) {
           console.error("Gagal menyalin teks", err);
         });
       }
+      
 
       function showNotification(message) {
         let notification = document.createElement("div");
