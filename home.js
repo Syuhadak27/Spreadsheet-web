@@ -59,13 +59,19 @@ export function handleHome() {
 </style>
 </head>
 <body>
+  <header class="header">
+    <h1>🔍 Gudang DataBase</h1>
+    <p>✔️ 📡 Terhubung langsung ke Google Sheets, tanpa ribet!</p>
+    <p><i> by AlfiSyuhadak</i> </p>
+  </header>
+
   <div class="container">
     <h1>🔍 Cari Data di Google Sheets</h1>
     <hr>
     
     <!-- Form Pencarian -->
     <form id="searchForm" action="/search" method="GET">
-      <input type="text" id="queryInput" name="query" placeholder="Masukkan kata kunci..." required>
+      <input type="text" id="queryInput" name="query" placeholder="Masukkan nama barang..." required>
       <br>
       <button type="submit" class="btn-search">Cari</button>
     </form>

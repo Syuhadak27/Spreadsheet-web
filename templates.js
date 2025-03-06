@@ -115,7 +115,7 @@ export function getResultsPage(title, query, resultHtml) {
   <body>
     <div class="container">
       <a href="/">🔙 Kembali ke Pencarian</a>
-      <h1>Hasil untuk "${query}"</h1>
+      <h1>Hasil untuk ${query}</h1>
       <hr>
       ${resultHtml}
       <a href="/">🔙 Kembali ke Pencarian</a>
