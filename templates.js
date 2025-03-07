@@ -110,9 +110,6 @@ export function getResultsPage(title, query, resultHtml) {
         hr {
           background: #8ab4f8;
         }
-        .result-card {
-          background: #333;
-          color: white;
         }
         a {
           color: #8ab4f8;

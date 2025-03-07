@@ -115,26 +115,27 @@ export function handleHome() {
             <div class="btn-container">
               <button type="button" class="btn-clear" onclick="clearSearch()">Clear</button>
               <button type="submit" class="btn-search">Cari</button>
-              <button type="button" class="btn-inout" onclick="copyQuery()">Inout</button>
+              <button type="button" class="btn-inout" onclick="redirectTo('inout')">Inout</button>
+              <button type="button" class="btn-search" onclick="redirectTo('list')">List</button>
             </div>
           </form>
 
         </div>
 
         <script>
-          function copyQuery() {
-            let query = document.getElementById('queryInput').value;
-            if (query.trim() !== "") {
-              window.location.href = \`/inout?query=\${encodeURIComponent(query)}\`;
-            } else {
-              alert("Masukkan nama barang terlebih dahulu!");
-            }
-          }
-
           function clearSearch() {
             document.getElementById('queryInput').value = "";
           }
 
+          function redirectTo(page) {
+            let query = document.getElementById('queryInput').value.trim();
+            if (query !== "") {
+              window.location.href = \`/\${page}?query=\${encodeURIComponent(query)}\`;
+            } else {
+              alert("Masukkan nama barang terlebih dahulu!");
+            }
+          }
+ 
           async function pasteText() {
             try {
               const text = await navigator.clipboard.readText();
