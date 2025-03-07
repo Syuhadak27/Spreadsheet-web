@@ -154,6 +154,7 @@ export function getResultsPage(title, query, resultHtml) {
       <a href="/">🔙 Kembali ke Pencarian</a>
       <h1>Hasil untuk ${query}</h1>
       <hr>
+      <small style="display: block; margin-top: -5px;">by M. Alfi Syuhadak</small>
       ${resultHtml}
       <a href="/">🔙 Kembali ke Pencarian</a>
     </div>
