@@ -21,8 +21,25 @@ export function handleHome() {
             background: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
+            border: 2px solid #007bff;
           }
-          h1 { color: #007bff; }
+          .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 10px;
+            color: gray;
+          }
+
+          h1 { 
+            color: #007bff; 
+            font-size: 18px; 
+          }
+          
+          .header p {
+            font-size: 10px; /* Ubah sesuai kebutuhan */
+            font-weight: normal; /* Bisa diubah ke bold jika perlu */
+          }
+          
           hr { border: none; height: 2px; background: #007bff; margin: 20px 0; }
           
           .search-container {
@@ -119,7 +136,9 @@ export function handleHome() {
               <button type="button" class="btn-search" onclick="redirectTo('list')">List</button>
             </div>
           </form>
-
+          <footer class="footer">
+            <p>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</p>
+          </footer>
         </div>
 
         <script>

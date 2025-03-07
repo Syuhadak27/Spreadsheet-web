@@ -55,16 +55,18 @@ export function getResultsPage(title, query, resultHtml) {
       }
       .container {
         width: 100%;
-        max-width: 600px;
+        max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
         background: #fff;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         border-radius: 10px;
+        border: 2px solid #007bff;
       }
       h1 {
-        color: #007bff;
-        font-size: 24px;
+
+        color: gray;
+        font-size: 18px;
       }
       hr {
         border: none;
@@ -79,9 +81,10 @@ export function getResultsPage(title, query, resultHtml) {
         background: #e9f5ff;
         padding: 10px;
         border-radius: 5px;
-        margin: 30px 0;
+        margin: 5px 0;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         width: auto;
+        border: 2px solid #007bff;
       } 
       {
         display: block;
@@ -160,6 +163,13 @@ export function getResultsPage(title, query, resultHtml) {
       .btn-inout:hover {
         background: #e68900 !important;
       }
+      
+      .footer {
+         margin-top: 20px;
+         text-align: center;
+         font-size: 12px;
+         color: gray;
+      }
 
     </style>
   </head>
@@ -168,9 +178,13 @@ export function getResultsPage(title, query, resultHtml) {
       <a href="/">🔙 Kembali ke Pencarian</a>
       <h1>Hasil untuk ${query}</h1>
       <hr>
-      <small style="display: block; margin-top: -5px;">by M. Alfi Syuhadak</small>
+      <!-- <small style="display: block; margin-top: -5px;">by M. Alfi Syuhadak</small> -->
       ${resultHtml}
       <a href="/">🔙 Kembali ke Pencarian</a>
+      
+      <footer class="footer">
+        <p>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</p>
+      </footer>
     </div>
 
     <script>
