@@ -21,40 +21,40 @@ export function getResultsPage(title, query, resultHtml) {
       }
       .search-container {
         display: flex;
-        align-items: center; /* Pusatkan vertikal */
-        gap: 5px; /* Beri jarak antar elemen */
+        align-items: center;
+        gap: 5px;
       }
       .search-container input {
-        flex: 1; /* Agar input memenuhi sisa ruang */
+        flex: 1;
         padding: 10px;
       }
       .clear-btn {
-        background: none; /* Hapus background */
-        border: none; /* Hapus border */
+        background: none;
+        border: none;
         cursor: pointer;
         font-size: 16px;
       }
       .summary p {
-         margin: 2px 0; 
-         padding: 0; 
-         font-size: 14px; 
+        margin: 2px 0;
+        padding: 0;
+        font-size: 14px;
       }
       .clear-btn {
-         position: absolute;
-         right: 10px;
-         cursor: pointer;
-         background: none;
-         border: none;
-         font-size: 15px;
-         color: #888;
-         outline: none;
-         padding: 0;
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-size: 15px;
+        color: #888;
+        outline: none;
+        padding: 0;
       }
       .clear-btn:hover {
-         color: red;
+        color: red;
       }
       .container {
-        width: 100%; 
+        width: 100%;
         max-width: 600px;
         margin: 0 auto;
         padding: 20px;
@@ -82,8 +82,8 @@ export function getResultsPage(title, query, resultHtml) {
         margin: 30px 0;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         width: auto;
-      }
-      a {
+      } 
+      {
         display: block;
         margin-top: 20px;
         text-decoration: none;
@@ -104,12 +104,26 @@ export function getResultsPage(title, query, resultHtml) {
           background: #1e1e1e;
           box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
         }
+        .result-card {
+          background: #2A2A2A; /* Warna lebih gelap */
+          color: #000000; /* Warna teks agar kontras */
+          box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+        .result-card strong {
+  color: #000000; /* Warna default (hitam) di mode terang */
+}
+
+/* Mode gelap */
+@media (prefers-color-scheme: dark) {
+  .result-card strong {
+    color: #FFD700; /* Warna kuning emas di mode gelap */
+  }
+}
         h1 {
           color: #8ab4f8;
         }
         hr {
           background: #8ab4f8;
-        }
         }
         a {
           color: #8ab4f8;
@@ -167,7 +181,6 @@ export function getResultsPage(title, query, resultHtml) {
           console.error("Gagal menyalin teks", err);
         });
       }
-      
 
       function showNotification(message) {
         let notification = document.createElement("div");

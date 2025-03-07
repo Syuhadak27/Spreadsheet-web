@@ -24,14 +24,15 @@ export async function handleSearch(request, env) {
     resultHtml = `<p style="color: red;">❌ Tidak ada hasil ditemukan.</p>`;
   } else {
     resultHtml = `<div class="results">`;
-    results.forEach(row => {
+    results.forEach((row, index) => {
+      const bgColor = index % 2 === 0 ? "#E3F2FD" : "#ffff00"; // Warna selang-seling
       resultHtml += `
-        <div class="result-card">
+        <div class="result-card" style="background-color: ${bgColor}; padding: 10px; border-radius: 5px; margin-bottom: 5px;">
           <strong onclick="copyToClipboard('${row[1]}')" style="cursor: pointer; color: inherit;">
-            ${row[1]}
+           ${row[1]}
           </strong> <br>
           ${row[0]} • ${row[2]} • ${row[3]} • ${row[4]}
-        </div>`;
+       </div>`;
     });
     resultHtml += `</div>`;
   }

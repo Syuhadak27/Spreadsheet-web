@@ -31,7 +31,11 @@ export async function handleSearch_inout(request, env) {
   let sumByName = {};
 
   let resultHtml = `<div class="results">`;
-  results.forEach(row => {
+
+  // **Deteksi mode gelap (di sisi klien)**
+  const isDarkMode = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  results.forEach((row, index) => {
     let masuk = parseInt(row[3]?.replace(/\D/g, ""), 10) || 0;
     let keluar = parseInt(row[4]?.replace(/\D/g, ""), 10) || 0;
     let name = row[5]?.trim() || "Tanpa Nama";
@@ -40,11 +44,20 @@ export async function handleSearch_inout(request, env) {
     totalKeluar += keluar;
     sumByName[name] = (sumByName[name] || 0) + keluar;
 
+    // **Tentukan warna latar belakang berdasarkan mode terang/gelap**
+    let bgColor;
+    if (isDarkMode) {
+      bgColor = index % 2 === 0 ? "#333366" : "#191f70"; // Mode gelap
+    } else {
+      bgColor = index % 2 === 0 ? "#E3F2FD" : "#ff5672"; // Mode terang
+    }
+
     resultHtml += `
-      <div class="result-card">
+      <div class="result-card" style="background-color: ${bgColor}; color: ${isDarkMode ? "#ffffff" : "#000000"}; padding: 10px; border-radius: 5px; margin-bottom: 5px;">
         <code>${row[0]}</code> • <code>${row[1]}</code> • ${row[2]} • ${row[3]} • ${row[4]} • ${name}
       </div>`;
   });
+
   resultHtml += `</div>`;
 
   const totalTersisa = totalMasuk - totalKeluar;
