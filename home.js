@@ -143,12 +143,21 @@ export function handleHome() {
             .btn-search { background: darkgreen; }
             .btn-inout { background: linear-gradient(45deg, darkgoldenrod, darkorange); }
           }
+          .search-container {
+            text-align: center;
+            margin: 20px;
+          }
         </style>
       </head>
       <body>
         <div class="fixed-header">
           <p>🔍 Gudang DataBase</p>
-          <p>✔️ Terhubung langsung ke Google Sheets!</p>
+          <p><marquee behavior="scroll" direction="left">✔️ Terhubung langsung ke Google Sheets!,
+             ⚡ Cepat & responsif dalam pencarian data!
+             📊 Data selalu up-to-date!
+             🔄 Sinkronisasi otomatis dengan Google Sheets!
+             🚀 Performa tinggi, hemat waktu!</marquee></p>
+
           <hr>
           
           <form id="searchForm">
@@ -180,6 +189,21 @@ export function handleHome() {
             document.getElementById('queryInput').value = "";
             document.getElementById('searchResults').innerHTML = "<marquee>Dibuat dengan ❤️ oleh M. Alfi Syuhadak...</marquee>";
           }
+
+          const messages = [
+             "✔️ Terhubung langsung ke Google Sheets!",
+             "⚡ Cepat & responsif dalam pencarian data!",
+             "📊 Data selalu up-to-date!",
+             "🔄 Sinkronisasi otomatis dengan Google Sheets!",
+             "🚀 Performa tinggi, hemat waktu!"
+         ];
+
+           function changeMarqueeText() {
+              const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+             document.getElementById("marqueeText").innerText = randomMessage;
+            }
+
+           setInterval(changeMarqueeText, 5000); // Ganti teks setiap 5 detik
 
           function searchData(page) {
             let query = document.getElementById('queryInput').value.trim();
