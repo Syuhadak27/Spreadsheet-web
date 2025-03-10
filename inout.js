@@ -42,7 +42,7 @@ export async function handleSearch_inout(request, env) {
     sumByName[name] = (sumByName[name] || 0) + keluar;
 
     // Alternatif warna tetap
-    let bgColor = index % 2 === 0 ? "lightblue" : "lightcoral";
+    let bgColor = index % 2 === 0 ? "lightblue" : "lightgray";
 
     resultHtml += `
       <div class="result-card" style="background-color: ${bgColor};">

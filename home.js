@@ -10,26 +10,56 @@ export function handleHome() {
           body {
             font-family: Arial, sans-serif;
             text-align: center;
-            padding: 30px;
             background: #f4f7f6;
             color: #333;
+            margin: 0;
+            padding-top: 150px;
           }
 
-          .container {
+          .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
             max-width: 500px;
-            margin: auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
+            padding: 15px;
+            z-index: 1000;
             border: 2px solid #007bff;
           }
 
+          .results-container {
+            margin-top: 75px;
+            width: 90%;
+            max-width: 400px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            border: 2px solid #007bff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            max-height: auto;
+            overflow-y: auto;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          
+          .result-card {
+            background: #E3F2FD;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            color: #000; /* Warna teks hasil pencarian menjadi hitam */
+          }
+
           h1 { color: #007bff; font-size: 18px; }
-          hr { border: none; height: 2px; background: #007bff; margin: 20px 0; }
+          hr { border: none; height: 2px; background: #007bff; margin: 10px 0; }
 
           input {
-            flex: 1;
             padding: 10px;
             width: 90%;
             max-width: 400px;
@@ -59,47 +89,6 @@ export function handleHome() {
           .btn-inout { background: linear-gradient(45deg, yellow, orange); color: black; }
           .btn-inout:hover { background: linear-gradient(45deg, orange, darkorange); }
 
-          .results { 
-            margin-top: 20px;
-            text-align: left;
-          }
-
-          .result-card {
-            background: #E3F2FD;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 5px;
-            box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-          }
-
-          .result-card:nth-child(odd) { 
-            background: #ffffcc; 
-          }
-
-          #toast {
-            visibility: hidden;
-            min-width: 200px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            text-align: center;
-            border-radius: 5px;
-            padding: 10px;
-            position: fixed;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            z-index: 1000;
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-          }
-
-          #toast.show {
-            visibility: visible;
-            opacity: 1;
-          }
-
           footer {
             font-size: 12px;
             margin-top: 10px;
@@ -108,11 +97,30 @@ export function handleHome() {
             color: #666;
           }
 
+          /* Mode Gelap */
           @media (prefers-color-scheme: dark) {
-            body { background: #121212; color: #e0e0e0; }
-            .container { background: #1e1e1e; box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); }
+            body { 
+              background: #121212; 
+              color: #ddd;
+            } 
+            .fixed-header, .results-container { 
+              background: #1e1e1e; 
+              box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+              color: #fff;
+            }
             h1, hr { color: #8ab4f8; background: #8ab4f8; }
-            input { background: #2c2c2c; color: #e0e0e0; border: 1px solid #555; }
+            input { 
+              background: #2c2c2c; 
+              color: #fff;
+              border: 1px solid #555; 
+            }
+            input::placeholder {
+              color: #bbb;
+            }
+            .result-card { 
+              background: #2c2c2c; 
+              color: #000; /* Warna teks hasil pencarian tetap hitam di mode gelap */
+            }
             .btn-clear { background: darkred; }
             .btn-search { background: darkgreen; }
             .btn-inout { background: linear-gradient(45deg, darkgoldenrod, darkorange); }
@@ -120,13 +128,9 @@ export function handleHome() {
         </style>
       </head>
       <body>
-        <header>
-          <h1>🔍 Gudang DataBase</h1>
+        <div class="fixed-header">
+          <p>🔍 Gudang DataBase</p>
           <p>✔️ Terhubung langsung ke Google Sheets!</p>
-        </header>
-
-        <div class="container">
-          <h1>🔎 Cari Data di Google Sheets</h1>
           <hr>
           
           <form id="searchForm">
@@ -141,15 +145,15 @@ export function handleHome() {
               <button type="button" class="btn-search" onclick="searchData('list')">List</button>
             </div>
           </form>
-
-          <div id="searchResults" class="results"></div>
-
-          <footer>
-            <p>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</p>
-          </footer>
         </div>
 
-        <div id="toast"></div>
+        <div class="results-container">
+          <div id="searchResults" class="results"></div>
+        </div>
+
+        <footer>
+          <p>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</p>
+        </footer>
 
         <script>
           function clearSearch() {
@@ -178,24 +182,6 @@ export function handleHome() {
             event.preventDefault();
             searchData('search');
           });
-
-          function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-              showToast(\`✔️ Disalin: \${text}\`);
-            }).catch(err => {
-              console.error('Gagal menyalin:', err);
-            });
-          }
-
-          function showToast(message) {
-            let toast = document.getElementById("toast");
-            toast.textContent = message;
-            toast.classList.add("show");
-
-            setTimeout(() => {
-              toast.classList.remove("show");
-            }, 2000);
-          }
         </script>
       </body>
       </html>
