@@ -19,7 +19,7 @@ export async function handleSearch(request, env) {
     keywords.every(keyword => row.some(cell => String(cell).toLowerCase().includes(keyword)))
   );
 
-  let resultHtml = "<div class='results'>";
+  let resultHtml = "<div class='results'>"; 
   if (results.length === 0) {
     resultHtml += "<p style='color: red;'>❌ Tidak ada hasil ditemukan.</p>";
   } else {

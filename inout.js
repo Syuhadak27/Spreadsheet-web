@@ -19,18 +19,17 @@ export async function handleSearch_inout(request, env) {
     keywords.every(keyword => row.some(cell => String(cell).toLowerCase().includes(keyword)))
   );
 
+  // Jika tidak ada hasil, hanya tampilkan pesan error
   if (results.length === 0) {
-    return new Response(
-      getResultsPage("Hasil INOUT", query, `<p class="no-result">❌ Tidak ada hasil ditemukan.</p>`),
-      { headers: { "Content-Type": "text/html" } }
-    );
+    return new Response("<p style='color: red;'>❌ Tidak ada hasil ditemukan.</p>", {
+      headers: { "Content-Type": "text/html" },
+    });
   }
 
+  let resultHtml = "";
   let totalMasuk = 0;
   let totalKeluar = 0;
   let sumByName = {};
-
-  let resultHtml = `<div class="results">`;
 
   results.forEach((row, index) => {
     let masuk = parseInt(row[3]?.replace(/\D/g, ""), 10) || 0;
@@ -50,8 +49,6 @@ export async function handleSearch_inout(request, env) {
       </div>`;
   });
 
-  resultHtml += `</div>`;
-
   const totalTersisa = totalMasuk - totalKeluar;
   const sumByNameText = Object.entries(sumByName)
     .filter(([_, total]) => total > 0)
@@ -64,6 +61,6 @@ export async function handleSearch_inout(request, env) {
     </div>`;
 
   return new Response(summaryHtml + resultHtml, {
-     headers: { "Content-Type": "text/html" },
+    headers: { "Content-Type": "text/html" },
   });
 }
