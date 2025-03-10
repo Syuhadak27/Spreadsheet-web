@@ -21,19 +21,21 @@ export async function handleSearch_list(request, env) {
 
   let resultHtml = "";
   if (results.length === 0) {
-    resultHtml = `<p style="color: red;">❌ Tidak ada hasil ditemukan.</p>`;
+    resultHtml = `<p class="no-result">❌ Tidak ada hasil ditemukan.</p>`;
   } else {
     resultHtml = `<div class="results">`;
-    results.forEach(row => {
+    results.forEach((row, index) => {
+      let bgColor = index % 2 === 0 ? "lightblue" : "lightcoral"; // Warna sama seperti inout
+
       resultHtml += `
-        <div class="result-card">
+        <div class="result-card" style="background-color: ${bgColor};">
           <strong> ${row[1]} • ${row[3]} • ${row[4]}</strong> <br>
         </div>`;
     });
     resultHtml += `</div>`;
   }
 
-  return new Response(getResultsPage("Hasil Pencarian", query, resultHtml), {
-    headers: { "Content-Type": "text/html" },
+  return new Response(resultHtml, {
+     headers: { "Content-Type": "text/html" },
   });
 }
