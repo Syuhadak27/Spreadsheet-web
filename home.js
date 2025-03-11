@@ -66,6 +66,7 @@ export function handleHome() {
             overflow-y: auto;
             margin-left: auto;
             margin-right: auto;
+            text-align: left;
           }
 
           .result-card {
