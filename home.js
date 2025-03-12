@@ -7,6 +7,8 @@ export function handleHome() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Database Spreadsheet</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
         <style>
           /* ========== Global Styles ========== */
         body {
@@ -42,6 +44,14 @@ export function handleHome() {
           margin-top: 6px;
           padding: 5px 0;
           text-align: center;
+          color: #666;
+        }
+
+        time {
+          font-size: 12px;
+          margin-top: 6px;
+          padding: 5px 0;
+          text-align: right;
           color: #666;
         }
 
@@ -198,12 +208,17 @@ export function handleHome() {
               <button type="submit" class="btn-search">Cari</button>
               <button type="button" class="btn-inout" onclick="searchData('inout')">Inout</button>
               <button type="button" class="btn-search" onclick="searchData('list')">List</button>
-              <button type="button" class="btn-export" onclick="exportToImage()">📸 Export to Image</button>
+              <button type="button" class="btn-export" onclick="exportToImage()">📸Image</button>
+
+
             </div>
           </form>
         </div>
   
         <div id="resultsContainer" class="results-container">
+          <time>
+              <p id="timestamp"></p>
+            </time>
           <div id="searchResults">
             <marquee id="loadingText">Dibuat dengan ❤️ oleh M. Alfi Syuhadak....</marquee>
           </div>
@@ -322,12 +337,36 @@ export function handleHome() {
               link.href = canvas.toDataURL("image/png");
               link.download = fileName;
               link.click();
+              return canvas.toDataURL("image/png");
 
             }).catch(error => {
               console.error("Gagal mengexport gambar:", error);
               alert("Gagal menyimpan gambar!");
             });
           }
+
+          function updateTimestamp() {
+    const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    let now = new Date();
+
+    let dayName = days[now.getDay()];
+    let day = now.getDate().toString().padStart(2, '0');
+    let month = (now.getMonth() + 1).toString().padStart(2, '0');
+    let year = now.getFullYear();
+    let hours = now.getHours().toString().padStart(2, '0');
+    let minutes = now.getMinutes().toString().padStart(2, '0');
+    let seconds = now.getSeconds().toString().padStart(2, '0');
+
+    
+    let formattedDate = dayName + day + "-" + month + "-" + year + "(" + hours + ":" + minutes + ")";
+    
+    document.getElementById("timestamp").textContent = formattedDate;
+}
+
+// Jalankan saat halaman dimuat
+window.onload = updateTimestamp;
+
+
         </script>
       </body>
       </html>
