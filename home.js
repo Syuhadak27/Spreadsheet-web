@@ -220,7 +220,7 @@ export function handleHome() {
               <p id="timestamp"></p>
             </time>
           <div id="searchResults">
-            <marquee id="loadingText">Dibuat dengan ❤️ oleh M. Alfi Syuhadak....</marquee>
+            <marquee id="loadingText">Hasil pencarian akan muncul disini....</marquee>
           </div>
            <footer>
               <p>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</p>
