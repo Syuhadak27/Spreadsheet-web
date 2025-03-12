@@ -1,13 +1,14 @@
 export function handleHome() {
-  return new Response(`
-    <!DOCTYPE html>
-    <html lang="id">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Database Spreadsheet</title>
-      <style>
-        /* ========== Global Styles ========== */
+    return new Response(`
+      <!DOCTYPE html>
+      <html lang="id">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Database Spreadsheet</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <style>
+          /* ========== Global Styles ========== */
         body {
           font-family: Arial, sans-serif;
           text-align: center;
@@ -38,7 +39,7 @@ export function handleHome() {
 
         footer {
           font-size: 12px;
-          margin-top: 10px;
+          margin-top: 6px;
           padding: 5px 0;
           text-align: center;
           color: #666;
@@ -76,7 +77,7 @@ export function handleHome() {
           margin-bottom: 5px;
           box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
           cursor: pointer;
-          color: #000;
+          color: #121212;
         }
 
         /* ========== Buttons ========== */
@@ -95,15 +96,15 @@ export function handleHome() {
           font-weight: bold;
         }
 
-        .btn-clear { background: pink; color: white; }
-        .btn-clear:hover { background: darkred; }
-
-        .btn-search { background: green; color: white; }
-        .btn-search:hover { background: darkgreen; }
-
-        .btn-inout { background: linear-gradient(45deg, yellow, orange); color: black; }
-        .btn-inout:hover { background: linear-gradient(45deg, orange, darkorange); }
-
+          .btn-clear { background: pink; color: white; }
+          .btn-clear:hover { background: darkred; }
+          .btn-search { background: green; color: white; }
+          .btn-search:hover { background: darkgreen; }
+          .btn-inout { background: linear-gradient(45deg, yellow, orange); color: black; }
+          .btn-inout:hover { background: linear-gradient(45deg, orange, darkorange); }
+          .btn-export { background: blue; color: white; }
+          .btn-export:hover { background: darkblue; }
+        
         /* ========== Toast Notification ========== */
         .toast {
           visibility: hidden;
@@ -134,12 +135,12 @@ export function handleHome() {
           .fixed-header, .results-container { 
             background: #1e1e1e; 
             box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-            color: #fff;
+            color: #ffffff;
           }
           h1, hr { color: #8ab4f8; background: #8ab4f8; }
           input { background: #2c2c2c; color: #fff; border: 1px solid #555; }
           input::placeholder { color: #bbb; }
-          .result-card { background: #2c2c2c; color: #fff; }
+          .result-card { background: #2c2c2c; color:rgb(15, 1, 1); }
           .btn-clear { background: darkred; }
           .btn-search { background: darkgreen; }
           .btn-inout { background: linear-gradient(45deg, darkgoldenrod, darkorange); }
@@ -176,99 +177,83 @@ export function handleHome() {
             border: 2px solid cyan;
           }
         }
-      </style>
-    </head>
-    <body>
-      <div class="fixed-header">
-        <p>🔍 Gudang DataBase</p>
-        <p><marquee id="marqueeText" behavior="scroll" direction="left">✔️ Terhubung langsung ke Google Sheets!,
+        
+        </style>
+      </head>
+      <body>
+        <div id="header" class="fixed-header">
+          <p>🔍 Gudang DataBase</p>
+          <p><marquee id="marqueeText" behavior="scroll" direction="left">✔️ Terhubung langsung ke Google Sheets!,
            ⚡ Cepat & responsif dalam pencarian data!
            📊 Data selalu up-to-date!
            🔄 Sinkronisasi otomatis dengan Google Sheets!
            🚀 Performa tinggi, hemat waktu!</marquee></p>
-
-        <hr>
-        
-        <form id="searchForm">
-          <div class="search-container">
-            <input type="text" id="queryInput" placeholder="Masukkan Nama Barang..." required>
-          </div>
-
-          <div class="btn-container">
-            <button type="button" class="btn-clear" onclick="clearSearch()">Clear</button>
-            <button type="submit" class="btn-search">Cari</button>
-            <button type="button" class="btn-inout" onclick="searchData('inout')">Inout</button>
-            <button type="button" class="btn-search" onclick="searchData('list')">List</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="results-container">
-        <div id="searchResults" class="results">
-          <marquee id="loadingText" behavior="scroll" direction="left">Dibuat dengan ❤️ oleh M. Alfi Syuhadak....</marquee>
+          <hr>
+          <form id="searchForm">
+            <div class="search-container">
+              <input type="text" id="queryInput" placeholder="Masukkan Nama Barang..." required>
+            </div>
+            <div class="btn-container">
+              <button type="button" class="btn-clear" onclick="clearSearch()">Clear</button>
+              <button type="submit" class="btn-search">Cari</button>
+              <button type="button" class="btn-inout" onclick="searchData('inout')">Inout</button>
+              <button type="button" class="btn-search" onclick="searchData('list')">List</button>
+              <button type="button" class="btn-export" onclick="exportToImage()">📸 Export to Image</button>
+            </div>
+          </form>
         </div>
-      </div>
-
-      <footer>
-        <p>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</p>
-      </footer>
-
-      <div id="customAlert" class="custom-alert">
-        <p id="alertText"></p>
-      </div>
-
-      <script>
-
-        // Reference to input element
-        const input = document.getElementById('queryInput');
-
-        function clearSearch() {
-          document.getElementById('queryInput').value = "";
-          document.getElementById('searchResults').innerHTML = "<marquee>Dibuat dengan ❤️ oleh M. Alfi Syuhadak...</marquee>";
-          setTimeout(() => {
-            input.focus();
-          }, 10);
-        }
-
-        function changeMarqueeText() {
-          const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-          document.getElementById("marqueeText").innerText = randomMessage;
-        }
-
-        // Initialize marquee text change
-        setInterval(changeMarqueeText, 5000); // Ganti teks setiap 5 detik
-
-        function searchData(page) {
-          let query = document.getElementById('queryInput').value.trim();
-          let resultsContainer = document.getElementById("searchResults");
-
-          if (!query) {
-            showCustomAlert("Masukkan nama barang terlebih dahulu!");
-            return;
+  
+        <div id="resultsContainer" class="results-container">
+          <div id="searchResults">
+            <marquee id="loadingText">Dibuat dengan ❤️ oleh M. Alfi Syuhadak....</marquee>
+          </div>
+           <footer>
+              <p>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</p>
+            </footer>
+        </div>
+  
+        <!-- Tombol Export ke Gambar -->
+        <!-- <div class="btn-container">
+        <!--   <button type="button" class="btn-export" onclick="exportToImage()">📸 Export to Image</button> -->
+        <!-- </div> -->
+  
+        <footer>
+          <p>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</p>
+        </footer>
+  
+        <script>
+          function clearSearch() {
+            document.getElementById('queryInput').value = "";
+            document.getElementById('searchResults').innerHTML = "<marquee>Dibuat dengan ❤️ oleh M. Alfi Syuhadak...</marquee>";
           }
+  
+          function searchData(page) {
+            let query = document.getElementById('queryInput').value.trim();
+            let resultsContainer = document.getElementById("searchResults");
+  
+            if (!query) {
+              alert("Masukkan nama barang terlebih dahulu!");
+              return;
+            }
+  
+            resultsContainer.innerHTML = "<marquee>🔍 Mencari data...</marquee>";
+  
+            fetch(\`/\${page}?query=\${encodeURIComponent(query)}\`)
+              .then(response => response.text())
+              .then(resultHtml => {
+                resultsContainer.innerHTML = resultHtml.trim() ? resultHtml : "<marquee>❌ Data tidak ditemukan.</marquee>";
+              })
+              .catch(() => {
+                resultsContainer.innerHTML = "<p class='no-result'>⚠️ Gagal mengambil data.</p>";
+              });
+          }
+  
+          document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            searchData('search');
+          });
 
-          resultsContainer.innerHTML = "<marquee>🔍 Mencari data..</marquee>";
-
-          fetch(\`/\${page}?query=\${encodeURIComponent(query)}\`)
-            .then(response => response.text())
-            .then(resultHtml => {
-              if (resultHtml.trim()) {
-                resultsContainer.innerHTML = resultHtml;
-              } else {
-                resultsContainer.innerHTML = "<marquee>❌ Data tidak ditemukan.</marquee>";
-              }
-            })
-            .catch(() => {
-              resultsContainer.innerHTML = "<p class='no-result'>⚠️ Gagal mengambil data.</p>";
-            });
-        }
-
-        document.getElementById('searchForm').addEventListener('submit', function(event) {
-          event.preventDefault();
-          searchData('search');
-        });
-
-        function copyToClipboard(text) {
+                  function copyToClipboard(text) {
           navigator.clipboard.writeText(text).then(() => {
             showToast('Teks berhasil disalin!');
           }).catch(err => {
@@ -315,8 +300,39 @@ export function handleHome() {
             document.getElementById('queryInput').focus();
           }, 500);
         };
-      </script>
-    </body>
-    </html>
-  `, { headers: { "Content-Type": "text/html" } });
-}
+  
+          function exportToImage() {
+            let element = document.getElementById('resultsContainer');
+            html2canvas(element, {
+              scale: 2,
+              backgroundColor: null
+            }).then(canvas => {
+              let now = new Date();
+              let timestamp = now.getDate().toString().padStart(2, '0') + 
+                              (now.getMonth() + 1).toString().padStart(2, '0') + 
+                              now.getFullYear() + "_" + 
+                              now.getHours().toString().padStart(2, '0') + 
+                             now.getMinutes().toString().padStart(2, '0') + 
+                             now.getSeconds().toString().padStart(2, '0');
+
+              let fileName = "syd_" + timestamp + ".png";
+
+
+              let link = document.createElement('a');
+              link.href = canvas.toDataURL("image/png");
+              link.download = fileName;
+              link.click();
+
+            }).catch(error => {
+              console.error("Gagal mengexport gambar:", error);
+              alert("Gagal menyimpan gambar!");
+            });
+          }
+        </script>
+      </body>
+      </html>
+    `, {
+      headers: { "Content-Type": "text/html" }
+    });
+  }
+  
