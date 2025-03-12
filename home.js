@@ -29,12 +29,12 @@ export function handleHome() {
           top: 0;
           left: 50%;
           transform: translateX(-50%);
-          width: 90%;
-          max-width: 500px;
+          width: 90%; //asli 90
+          max-width: 400px; //asli 500
           background: white;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
           border-radius: 10px;
-          padding: 15px;
+          padding: 10px; //asli 15
           z-index: 1000;
           border: 2px solid #007bff;
         }
@@ -65,7 +65,7 @@ export function handleHome() {
 
         /* ========== Result Container ========== */
         .results-container {
-          margin-top: 100px;
+          margin-top: 80px;
           width: 90%;
           max-width: 400px;
           background: #e3f2fd;
@@ -192,7 +192,7 @@ export function handleHome() {
       </head>
       <body>
         <div id="header" class="fixed-header">
-          <p>🔍 Gudang DataBase</p>
+          
           <p><marquee id="marqueeText" behavior="scroll" direction="left">✔️ Terhubung langsung ke Google Sheets!,
            ⚡ Cepat & responsif dalam pencarian data!
            📊 Data selalu up-to-date!
