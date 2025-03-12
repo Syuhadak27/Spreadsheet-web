@@ -139,7 +139,7 @@ export function handleHome() {
           h1, hr { color: #8ab4f8; background: #8ab4f8; }
           input { background: #2c2c2c; color: #fff; border: 1px solid #555; }
           input::placeholder { color: #bbb; }
-          .result-card { background: #2c2c2c; color: #000; }
+          .result-card { background: #2c2c2c; color: #fff; }
           .btn-clear { background: darkred; }
           .btn-search { background: darkgreen; }
           .btn-inout { background: linear-gradient(45deg, darkgoldenrod, darkorange); }
@@ -148,15 +148,40 @@ export function handleHome() {
           text-align: center;
           margin: 20px;
         }
+        
+        /* ========== Custom Pop-up Alert ========== */
+        .custom-alert {
+          position: fixed;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: white;
+          border: 2px solid blue;
+          color: black;
+          padding: 10px 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          font-weight: bold;
+          display: none;
+          opacity: 0;
+          transition: opacity 0.5s ease-in-out;
+          z-index: 10000;
+        }
 
-        
-        
+        /* Dark Mode */
+        @media (prefers-color-scheme: dark) {
+          .custom-alert {
+            background: black;
+            color: white;
+            border: 2px solid cyan;
+          }
+        }
       </style>
     </head>
     <body>
       <div class="fixed-header">
         <p>🔍 Gudang DataBase</p>
-        <p><marquee behavior="scroll" direction="left">✔️ Terhubung langsung ke Google Sheets!,
+        <p><marquee id="marqueeText" behavior="scroll" direction="left">✔️ Terhubung langsung ke Google Sheets!,
            ⚡ Cepat & responsif dalam pencarian data!
            📊 Data selalu up-to-date!
            🔄 Sinkronisasi otomatis dengan Google Sheets!
@@ -188,33 +213,37 @@ export function handleHome() {
         <p>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</p>
       </footer>
 
+      <div id="customAlert" class="custom-alert">
+        <p id="alertText"></p>
+      </div>
+
       <script>
+
+        // Reference to input element
+        const input = document.getElementById('queryInput');
+
         function clearSearch() {
           document.getElementById('queryInput').value = "";
           document.getElementById('searchResults').innerHTML = "<marquee>Dibuat dengan ❤️ oleh M. Alfi Syuhadak...</marquee>";
+          setTimeout(() => {
+            input.focus();
+          }, 10);
         }
 
-        const messages = [
-           "✔️ Terhubung langsung ke Google Sheets!",
-           "⚡ Cepat & responsif dalam pencarian data!",
-           "📊 Data selalu up-to-date!",
-           "🔄 Sinkronisasi otomatis dengan Google Sheets!",
-           "🚀 Performa tinggi, hemat waktu!"
-       ];
+        function changeMarqueeText() {
+          const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+          document.getElementById("marqueeText").innerText = randomMessage;
+        }
 
-         function changeMarqueeText() {
-            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-           document.getElementById("marqueeText").innerText = randomMessage;
-          }
-
-         setInterval(changeMarqueeText, 5000); // Ganti teks setiap 5 detik
+        // Initialize marquee text change
+        setInterval(changeMarqueeText, 5000); // Ganti teks setiap 5 detik
 
         function searchData(page) {
           let query = document.getElementById('queryInput').value.trim();
           let resultsContainer = document.getElementById("searchResults");
 
           if (!query) {
-            alert("Masukkan nama barang terlebih dahulu!");
+            showCustomAlert("Masukkan nama barang terlebih dahulu!");
             return;
           }
 
@@ -238,11 +267,13 @@ export function handleHome() {
           event.preventDefault();
           searchData('search');
         });
+
         function copyToClipboard(text) {
           navigator.clipboard.writeText(text).then(() => {
-              showToast('Teks berhasil disalin!');
+            showToast('Teks berhasil disalin!');
           }).catch(err => {
-              console.error('Gagal menyalin:', err);
+            console.error('Gagal menyalin:', err);
+            showToast('Gagal menyalin teks');
           });
         }
 
@@ -259,6 +290,31 @@ export function handleHome() {
           }, 3000);
         }
         
+        function showCustomAlert(message) {
+          let alertBox = document.getElementById("customAlert");
+          let alertText = document.getElementById("alertText");
+
+          alertText.textContent = message;
+          alertBox.style.display = "block";
+          setTimeout(() => {
+            alertBox.style.opacity = "1";
+          }, 10);
+
+          // Hilangkan alert setelah 3 detik
+          setTimeout(() => {
+            alertBox.style.opacity = "0";
+            setTimeout(() => {
+              alertBox.style.display = "none";
+            }, 500);
+          }, 3000);
+        }
+
+        // Focus input on page load
+        window.onload = function() {
+          setTimeout(() => {
+            document.getElementById('queryInput').focus();
+          }, 500);
+        };
       </script>
     </body>
     </html>
