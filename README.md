@@ -9,6 +9,7 @@ Gudang Database Bot adalah aplikasi berbasis Cloudflare Workers yang memungkinka
 ✅ **Tampilan Responsif** – Didukung **light mode** & **dark mode**.  
 ✅ **Salin Data Cepat** – Klik hasil pencarian untuk menyalin ke clipboard.  
 ✅ **Desain Sederhana & Elegan** – Menggunakan CSS modern dengan efek hover.  
+✅ **Mengubah data menjadi gambar** - Mengubah hasil menjadi sebuah gambar yg siap di unduh.
 
 ---
 

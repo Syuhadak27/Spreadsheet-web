@@ -14,7 +14,8 @@ export function handleHome() {
         body {
           font-family: Arial, sans-serif;
           text-align: center;
-          background: #f4f7f6;
+          
+          background: #e3f2fd;
           color: #333;
           margin: 0;
           padding-top: 150px;
@@ -29,13 +30,13 @@ export function handleHome() {
           top: 0;
           left: 50%;
           transform: translateX(-50%);
-          width: 90%; //asli 90
-          max-width: 400px; //asli 500
-          background: white;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+          width: 90%;
+          max-width: 400px;
+          background-color: #e3f2fd; /* Pastikan background solid */
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Gunakan bayangan lebih solid */
           border-radius: 10px;
-          padding: 10px; //asli 15
-          z-index: 1000;
+          padding: 10px;
+          z-index: 500;
           border: 2px solid #007bff;
         }
 
@@ -65,7 +66,7 @@ export function handleHome() {
 
         /* ========== Result Container ========== */
         .results-container {
-          margin-top: 80px;
+          margin-top: 45px;
           width: 90%;
           max-width: 400px;
           background: #e3f2fd;
@@ -198,7 +199,7 @@ export function handleHome() {
            📊 Data selalu up-to-date!
            🔄 Sinkronisasi otomatis dengan Google Sheets!
            🚀 Performa tinggi, hemat waktu!</marquee></p>
-          <hr>
+          
           <form id="searchForm">
             <div class="search-container">
               <input type="text" id="queryInput" placeholder="Masukkan Nama Barang..." required>
@@ -220,7 +221,7 @@ export function handleHome() {
               <p id="timestamp"></p>
             </time>
           <div id="searchResults">
-            <marquee id="loadingText">Hasil pencarian akan muncul disini....</marquee>
+
           </div>
            <footer>
               <p>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</p>
@@ -239,7 +240,7 @@ export function handleHome() {
         <script>
           function clearSearch() {
             document.getElementById('queryInput').value = "";
-            document.getElementById('searchResults').innerHTML = "<marquee>Dibuat dengan ❤️ oleh M. Alfi Syuhadak...</marquee>";
+            document.getElementById('searchResults').innerHTML = "";
           }
   
           function searchData(page) {
