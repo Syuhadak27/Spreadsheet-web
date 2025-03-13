@@ -269,6 +269,30 @@ export function handleHome() {
             searchData('search');
           });
 
+         function debounce(func, delay) {
+            let timer;
+            return function () {
+               clearTimeout(timer);
+               timer = setTimeout(() => func.apply(this, arguments), delay);
+            };
+          }
+
+         document.getElementById("queryInput").addEventListener("input", debounce(() => {
+             let query = document.getElementById("queryInput").value.trim();
+
+             if (query.length < 3) {
+                 document.getElementById('searchResults').innerHTML = ""; // Hapus hasil pencarian
+                 return;
+              }
+
+
+             if (query.length >= 3) {  // Jalankan hanya jika input ≥ 3 karakter
+                 searchData("search");
+              }
+          }, 300)); // Delay 300ms lebih optimal
+
+
+
                   function copyToClipboard(text) {
           navigator.clipboard.writeText(text).then(() => {
             showToast('Teks berhasil disalin!');
