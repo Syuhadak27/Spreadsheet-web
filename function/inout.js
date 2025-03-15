@@ -1,5 +1,6 @@
 import { getFromKV_inout, saveToKV_inout } from "./cache";
 import { getCachedData_inout } from "./sheets";
+import { styles } from "./func_style";
 
 export async function handleSearch_inout(request, env) {
   const url = new URL(request.url);
@@ -40,51 +41,7 @@ export async function handleSearch_inout(request, env) {
 
   const totalTersisa = totalMasuk - totalKeluar;
 
-  let tableHtml = `
-    <style>
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: white;
-        font-size: 12px; /* Ukuran teks kecil */
-      }
-      th, td {
-        border: 1px solid blue; /* Warna garis biru */
-        padding: 4px; /* Padding lebih kecil */
-        text-align: left;
-        word-wrap: break-word; /* Supaya teks panjang tetap rapi */
-        white-space: nowrap; /* Hindari teks terlalu lebar */
-      }
-      th {
-        background-color: #007bff;
-        color: white;
-      }
-      tr:nth-child(even) {
-        background-color: #f2f2f2;
-      }
-      tr:nth-child(odd) {
-        background-color: #e0f7fa;
-      }
-      @media (prefers-color-scheme: dark) {
-        body {
-          background-color: #121212;
-          color: white;
-        }
-        table {
-          background-color: #222;
-          color: white;
-        }
-        th {
-          background-color: #0056b3;
-        }
-        tr:nth-child(even) {
-          background-color: #333;
-        }
-        tr:nth-child(odd) {
-          background-color: #444;
-        }
-      }
-    </style>
+  let tableHtml = `<style>${styles}</style>
 
     <div class="summary">
       <p>🟢 Masuk: ${totalMasuk} pcs • 🔴 Keluar: ${totalKeluar} pcs • 🟡 Tersisa: ${totalTersisa} pcs</p>
