@@ -27,8 +27,8 @@ export function homeTemplate(styles, scripts) {
                <button type="submit" class="btn-search" onclick="setActiveTab(this)">Cari</button>
                <button type="button" class="btn-inout" onclick="searchData('inout'); setActiveTab(this)">Inout</button>
                <button type="button" class="btn-search" onclick="searchData('list'); setActiveTab(this)">List</button>
-               <button type="button" class="btn-export" onclick="exportToImage(); setActiveTab(this)">📸</button>
-               <button type="button" class="btn-clear" onclick="resetData(); setActiveTab(this)">🔄</button>
+               <button type="button" class="btn-export" onclick="exportToImage(); setActiveTab(this)">Image</button>
+               <button type="button" class="btn-clear" onclick="resetData(); setActiveTab(this)">Reset</button>
             </div>
           </form>
         </div>
@@ -39,7 +39,7 @@ export function homeTemplate(styles, scripts) {
           </time>
           <div id="searchResults"></div>
            <footer>
-              <p>&copy; 2025 - Dibuat dengan ❤️ oleh Syd</p>
+              <p>&copy; 2025 - Dibuat oleh 🤖Ai.Syd.Gle.inc dengan ❤️</p>
             </footer>
         </div>
   
