@@ -9,7 +9,20 @@ export const styles = `
           margin: 0;
           padding-top: 150px;
         }
->
+                  .clock-container {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    padding: 8px;
+    background-color: transparent;
+    color: lime;
+    border-radius: 8px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 
         h1 { color: #007bff; font-size: 18px; }
         hr { border: none; height: 2px; background: #007bff; margin: 10px 0; }
@@ -17,7 +30,7 @@ export const styles = `
         /* ========== Header & Search Bar ========== */
         .fixed-header {
           position: fixed;
-          top: 0;
+          top: 15px;
           left: 50%;
           transform: translateX(-50%);
           width: 90%;
@@ -28,6 +41,41 @@ export const styles = `
           padding: 10px;
           z-index: 500;
           border: 2px solid #007bff;
+        }
+        
+        .image-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.image-card img {
+    max-width: 100%;
+    height: auto;
+}
+        
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            font-size: 12px; /* Ukuran font default */
+        }
+        td, th {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        .controls {
+            margin-bottom: 10px;
+        }
+        button {
+            font-size: 16px;
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
         }
 
         footer {
@@ -46,6 +94,8 @@ export const styles = `
           color: #666;
         }
 
+
+
         input {
           padding: 10px;
           width: 90%;
@@ -56,7 +106,7 @@ export const styles = `
 
         /* ========== Result Container ========== */
         .results-container {
-          margin-top: 45px;
+          margin-top: 120px;
           width: 90%;
           max-width: 400px;
           background: #e3f2fd;
@@ -70,6 +120,22 @@ export const styles = `
           margin-right: auto;
           text-align: left;
         }
+                  /* Tambahan CSS untuk banner teks berjalan */
+          .banner {
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            color: white;
+            font-weight: bold;
+            padding: 5px 0;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+          }
+
+          marquee {
+            font-size: 14px;
+            font-weight: bold;
+          }
 
 
 
@@ -85,9 +151,11 @@ export const styles = `
 
 /* ========== Tab Buttons ========== */
 .btn-container {
-  display: flex;
+  
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 tombol per baris */
+  gap: 7px;
   justify-content: center;
-  gap: 0; /* Hilangkan gap antara tombol */
   margin-top: 10px;
   background: #f0f0f0;
   border-radius: 8px;
@@ -97,12 +165,15 @@ export const styles = `
 }
 
 button {
+  width: 70px;  /* Ubah lebar */
+  height: 24px;  /* Ubah tinggi */
+  font-size: 10px; /* Ubah ukuran font */
   padding: 8px 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: 3px;
   cursor: pointer;
-  font-weight: bold;
-  text-align: center;
+  font-weight: normal;
+  text-align: left;
   flex-grow: 1;
   transition: all 0.3s ease;
   position: relative;
@@ -122,6 +193,7 @@ button.active {
 
 /* Warna latar tab */
 .btn-clear { background: #ffcccb; color: #8b0000; }
+.btn-download { background:rgba(7, 120, 248, 0.86); color:rgb(210, 211, 218); }
 .btn-search { background: #90ee90; color: #006400; }
 .btn-inout { background: #ffd700; color: #b8860b; }
 .btn-export { background: #add8e6; color: #00008b; }
@@ -217,5 +289,62 @@ button.active {
             border: 2px solid cyan;
           }
         }
+
+ 
+          /* Tambahan CSS untuk iframe dan hasil pencarian Bing */
+          .bing-container {
+            width: 100%;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+          }
+  
+          .bing-frame {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+  
+          .bing-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            display: flex;
+            align-items: center;
+          }
+  
+          .bing-title img {
+            height: 24px;
+            margin-right: 8px;
+          }
+  
+          .bing-loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            color: #666;
+          }
+  
+          .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #007FFF;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+          }
+  
+          @keyframes spin {
+            to {
+              transform: rotate(360deg);
+            }
+          }
+
+
 
 `;

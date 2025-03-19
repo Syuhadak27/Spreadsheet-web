@@ -10,7 +10,7 @@ export async function handleSearch_list(request, env) {
 
   let data = await getFromKV(env);
   if (!data) {
-    data = await getCachedData();
+    data = await getCachedData(env);
     await saveToKV(data, env);
   }
 

@@ -1,15 +1,18 @@
-
-import { getCachedData } from "./sheets";
+import { getFromKV_stok, saveToKV_stok } from "./cache";
+import {  getCachedData_stok } from "./sheets";
 import { styles } from "./func_style";
 
-export async function handleSearch(request, env) {
+export async function handleSearch_stok(request, env) {
   const url = new URL(request.url);
   const query = url.searchParams.get("query");
 
-  if (!query) 
-    return new Response("<p style='color: red;'>❌ Masukkan query!</p>", { status: 400 });
+  if (!query) return new Response("Masukkan query!", { status: 400 });
 
-  let data = await getCachedData(env); // Ambil data dari cache atau Sheets jika cache kosong
+  let data = await getFromKV_stok(env);
+  if (!data) {
+    data = await getCachedData_stok(env);
+    await saveToKV_stok(data, env);
+  }
 
   const keywords = query.toLowerCase().split(" ");
   const results = data.filter(row =>
@@ -17,10 +20,11 @@ export async function handleSearch(request, env) {
   );
 
   let resultHtml = `<style>${styles}</style>
+
     <div class="results">`;
 
   if (results.length === 0) {
-    resultHtml += "<p style='color: red;'>❌ Tidak ada hasil ditemukan.</p>";
+    resultHtml += `<p class="no-result" style="color: red;">❌ Tidak ada hasil ditemukan.</p>`;
   } else {
     resultHtml += `<table class="search-table">
                      <thead>
@@ -33,11 +37,11 @@ export async function handleSearch(request, env) {
                        </tr>
                      </thead>
                      <tbody>`;
-  
+
     results.forEach(row => {
       resultHtml += `
         <tr>
-          <td ondblclick="insertToSearch('${row[1]}')"><b>${row[1]}</b></td>
+          <td onclick="copyToClipboard('${row[1]}')"><b>${row[1]}</b></td>
           <td>${row[0]}</td>
           <td>${row[2]}</td>
           <td>${row[3]}</td>
