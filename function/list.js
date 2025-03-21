@@ -39,7 +39,7 @@ export async function handleSearch_list(request, env) {
     results.forEach(row => {
       resultHtml += `
         <tr>
-          <td onclick="copyToClipboard('${row[1]}')">${row[1]}</td>
+          <td onclick="copyToClipboard('${row[1]}•${row[3]}•${row[4]}')">${row[1]}</td>
           <td>${row[3]}</td>
           <td>${row[4]}</td>
         </tr>`;
