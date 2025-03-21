@@ -10,7 +10,6 @@ export function homeTemplate(styles, scripts) {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
         <style>
           ${styles}
-
         </style>
       </head>
       <body>
@@ -40,6 +39,7 @@ export function homeTemplate(styles, scripts) {
               <button type="button" class="btn-export" onclick="exportToImage(); setActiveTab(this)">💾 Save</button>
               <button type="button" class="btn-inout" onclick="searchBingImage(); setActiveTab(this)">🖼️ Image</button>
               <button type="button" class="btn-clear" onclick="resetData(); setActiveTab(this)">🔄 Reset</button>
+              
              
             </div>
 
@@ -54,29 +54,65 @@ export function homeTemplate(styles, scripts) {
           <div id="searchResults"></div>
   
           <!-- Container untuk hasil pencarian Bing -->
-          <button type="button" class="btn-clear" onclick="hapusGambar(); setActiveTab(this)">Close Img</button><button type="button" class="btn-download" onclick="window.location.href='https://ouo.io/yi0jaiJ'; setActiveTab(this)">Download</button>
+          <button type="button" class="btn-clear" onclick="hapusGambar(); setActiveTab(this)">Close Img</button><button type="button" class="btn-download" onclick="window.location.href='https://ouo.io/yi0jaiJ'; setActiveTab(this)">Download</button><button type="button" class="btn-download" onclick="logoutUser()">Logout</button>
 
 
           <div id="bingContainer" class="bing-container" style="display: none;"> 
           </div>
   
           <footer>
-            <p>&copy; 2025 - Dibuat oleh 🤖Ai.Syd.Gle.inc dengan ❤️</p>
+            <p>&copy; 2025 - Dibuat oleh 🤖Ai.Syd.Gle.inc</p>
+            <p id="lastUpdated">🔄 Terakhir diperbarui: -</p>
             
           </footer>
         </div>
         <footer>
           
-          <p><i>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</i></p>
-          <p id="lastUpdated">🔄 Terakhir diperbarui: -</p>
+          <p><i>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</i></p>          
+           <p>🌐<span id="currentDomain"></span></p>
          
         </footer>
   
         <script>
           ${scripts}
+          document.getElementById("currentDomain").textContent = window.location.hostname;  
+          
+          // Fungsi logout user
+function logoutUser() {
+  const userToLogout = getCookieValue("loggedInUser"); // Ambil user dari cookie
 
+  if (!userToLogout) {
+    alert("Anda belum login!");
+    return;
+  }
 
-  
+  fetch("/logout-user", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user: userToLogout }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.cookie = "loggedInUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        alert("Logout berhasil!");
+        window.location.href = "/"; // Redirect ke halaman utama
+      } else {
+        alert("Gagal logout: " + data.message);
+      }
+    })
+    .catch(error => console.error("Error saat logout:", error));
+}
+
+// Fungsi mendapatkan cookie
+function getCookieValue(cookieName) {
+  const cookies = document.cookie.split("; ");
+  for (let cookie of cookies) {
+    const [name, value] = cookie.split("=");
+    if (name === cookieName) return value;
+  }
+  return null;
+}
         </script>
       </body>
       </html>
