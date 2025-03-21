@@ -10,7 +10,7 @@ export async function handleSearch_inout(request, env) {
 
   let data = await getFromKV_inout(env);
   if (!data) {
-    data = await getCachedData_inout();
+    data = await getCachedData_inout(env);
     await saveToKV_inout(data, env);
   }
 

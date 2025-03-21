@@ -113,6 +113,8 @@ function getCookieValue(cookieName) {
   }
   return null;
 }
+
+
         </script>
       </body>
       </html>

@@ -2,10 +2,14 @@ import { config } from '../config';
 const TELEGRAM_BOT_TOKEN = config.BOT_TOKEN;
 const TELEGRAM_CHANNEL_ID = config.CHANNEL_ID;
 
-export async function logSearch(env, user, query) {
+export async function logSearch(env, request, query) {
     const timestamp = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
-    const ipAddress = user.headers.get("CF-Connecting-IP") || "Unknown IP";
-    const userAgent = user.headers.get("User-Agent") || "Unknown Device";
+    const ipAddress = request.headers.get("CF-Connecting-IP") || "Unknown IP";
+    const userAgent = request.headers.get("User-Agent") || "Unknown Device";
+    const cookie = request.headers.get("Cookie") || "";
+    
+    // 🔥 Ambil nama user dari cookie
+    const loggedInUser = getCookieValue(cookie, "loggedInUser") || "Guest";
 
     // 🔥 Parsing User-Agent untuk dapatkan detail perangkat
     const deviceInfo = getDeviceInfo(userAgent);
@@ -16,6 +20,7 @@ export async function logSearch(env, user, query) {
 🌍 <b>IP:</b> ${ipAddress}
 📱 <b>Device:</b> ${deviceInfo}</blockquote>
 <blockquote>🔄 <b>UA:</b> <code>${userAgent}</code></blockquote>
+👤 <b>User:</b> ${loggedInUser}
 🔍 <b>Query:</b> <code>${query}</code>
     `;
 
@@ -31,6 +36,12 @@ export async function logSearch(env, user, query) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
     });
+}
+
+// ✅ Fungsi untuk mengambil nilai cookie tertentu
+function getCookieValue(cookie, name) {
+    const match = cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+    return match ? match[2] : null;
 }
 
 // ✅ Fungsi Parsing User-Agent dengan deteksi merek ponsel

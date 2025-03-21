@@ -7,6 +7,8 @@ import { resetSemuaCache } from "./function/reset";
 import { handleSearch_stok } from "./function/stok";
 import { loginPage, adminDashboard, getCookieValue } from "./admin";
 import { config } from "./config";
+import { handleAdminAuth } from "./admin_login";
+
 
 const allowedUsers = config.USER_WEB;
 const adminCredentials = { username: "admin", password: "123" }; // Admin login
@@ -16,6 +18,9 @@ export default {
     const url = new URL(request.url);
     const cookie = request.headers.get("Cookie") || "";
     const loggedInUser = getCookieValue(cookie, "loggedInUser");
+    const adminResponse = handleAdminAuth(request);
+    if (adminResponse.status !== 404) return adminResponse;
+
 
     // **🔹 Endpoint untuk login user**
     if (url.pathname === "/login-user") {
@@ -117,6 +122,7 @@ export default {
       return new Response("Admin telah logout", {
         headers: {
           "Set-Cookie": "loggedInUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;",
+          "Location" : "/"
         },
       });
     }

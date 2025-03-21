@@ -13,6 +13,11 @@ export function loginPage() {
       <meta charset="UTF-8">
       <title>Login</title>
       <style>
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
         body { 
           display: flex; 
           align-items: center; 
@@ -21,28 +26,71 @@ export function loginPage() {
           background: linear-gradient(135deg, #667eea, #764ba2); 
           font-family: Arial, sans-serif;
         }
-        .login-box { 
-          background: white; 
-          padding: 20px; 
-          border-radius: 10px; 
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+        .login-box {
+          width: 320px;
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(10px);
+          padding: 20px;
+          border-radius: 15px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
           text-align: center;
+          transition: transform 0.3s ease-in-out;
         }
-        input, button { 
-          display: block; 
-          width: 100%; 
-          margin: 10px 0; 
-          padding: 10px; 
-          border: none; 
-          border-radius: 5px;
+        h2 {
+          color: white;
+          margin-bottom: 15px;
         }
-        button { 
-          background: #4CAF50; 
-          color: white; 
-          cursor: pointer; 
+        .tab-buttons {
+          display: flex;
+          justify-content: space-around;
+          margin-bottom: 15px;
+        }
+        .tab-buttons button {
+          flex: 1;
+          padding: 10px;
+          border: none;
+          background: rgba(255, 255, 255, 0.3);
+          color: white;
+          cursor: pointer;
           transition: 0.3s;
         }
-        button:hover { background: #45a049; }
+        .tab-buttons button.active {
+          background: #4CAF50;
+        }
+        input {
+          display: block;
+          width: 100%;
+          margin: 10px 0;
+          padding: 10px;
+          border: 2px solid transparent;
+          border-radius: 5px;
+          background: rgba(255, 255, 255, 0.2);
+          color: white;
+          transition: 0.3s;
+        }
+        input::placeholder {
+          color: rgba(255, 255, 255, 0.7);
+        }
+        input:focus {
+          border-color: #4CAF50;
+          background: rgba(255, 255, 255, 0.4);
+          outline: none;
+        }
+        button { 
+          width: 100%;
+          padding: 10px;
+          border: none;
+          border-radius: 5px;
+          background: #4CAF50; 
+          color: white; 
+          font-weight: bold;
+          cursor: pointer; 
+          transition: 0.3s;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+          background: #45a049;
+        }
         #popup { 
           display: none; 
           position: fixed; 
@@ -58,18 +106,27 @@ export function loginPage() {
           transition: opacity 0.5s ease-in-out;
         }
         #popup.show { opacity: 1; display: block; }
+        .hidden { display: none; }
       </style>
     </head>
     <body>
       <div class="login-box">
-        <h2>Masukkan Nama Anda</h2>
-        <input type="text" id="usernameInput" placeholder="masukkan namamu dg huruf kecil..">
-        <button onclick="checkLogin()">Login</button>
+        <h2>Login</h2>
+        <div class="tab-buttons">
+          <button id="userTab" class="active" onclick="switchTab('user')">User</button>
+          <button id="adminTab" onclick="switchTab('admin')">Admin</button>
+        </div>
 
-        <h3>Login Admin</h3>
-        <input type="text" id="adminUsername" placeholder="Admin Username">
-        <input type="password" id="adminPassword" placeholder="Password">
-        <button onclick="checkAdminLogin()">Login Admin</button>
+        <div id="userLogin">
+          <input type="text" id="usernameInput" placeholder="Masukkan nama Anda..">
+          <button onclick="checkLogin()">Login</button>
+        </div>
+
+        <div id="adminLogin" class="hidden">
+          <input type="text" id="adminUsername" placeholder="Admin Username">
+          <input type="password" id="adminPassword" placeholder="Password">
+          <button onclick="checkAdminLogin()">Login Admin</button>
+        </div>
       </div>
 
       <div id="popup"></div>
@@ -109,6 +166,13 @@ export function loginPage() {
               }
             });
         }
+
+        function switchTab(role) {
+          document.getElementById("userLogin").classList.toggle("hidden", role !== "user");
+          document.getElementById("adminLogin").classList.toggle("hidden", role !== "admin");
+          document.getElementById("userTab").classList.toggle("active", role === "user");
+          document.getElementById("adminTab").classList.toggle("active", role === "admin");
+        }
       </script>
     </body>
     </html>
@@ -128,30 +192,52 @@ export function adminDashboard(users) {
           font-family: Arial, sans-serif; 
           background: linear-gradient(135deg, #2193b0, #6dd5ed); 
           text-align: center; 
-          padding: 20px; 
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-height: 100vh;
         }
-        table { 
-          width: 50%; 
-          margin: auto; 
-          border-collapse: collapse; 
-          background: white; 
+        .dashboard-container {
+          width: 90%;
+          max-width: 800px;
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
           box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-        th, td { 
-          padding: 10px; 
-          border: 1px solid #ddd; 
+        h2 {
+          color: #007bff;
         }
-        th { background: #007bff; color: white; }
+        .user-list {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 10px;
+          padding: 10px;
+        }
+        .user-card {
+          background: #f8f9fa;
+          padding: 15px;
+          border-radius: 8px;
+          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+          text-align: center;
+        }
         button { 
           background: #f44336; 
           color: white; 
           border: none; 
-          padding: 5px 10px; 
+          padding: 8px 12px; 
           cursor: pointer; 
           border-radius: 5px;
           transition: 0.3s;
         }
         button:hover { background: #d32f2f; }
+        .logout-btn {
+          background: #007bff;
+          margin-top: 15px;
+          padding: 10px;
+          width: 100%;
+        }
         #popup { 
           display: none; 
           position: fixed; 
@@ -170,12 +256,18 @@ export function adminDashboard(users) {
       </style>
     </head>
     <body>
-      <h2>Admin Dashboard</h2>
-      <table>
-        <tr><th>User</th><th>Aksi</th></tr>
-        ${users.map(user => `<tr id="user-${user}"><td>${user}</td><td><button onclick="logoutUser('${user}')">Logout</button></td></tr>`).join("")}
-      </table>
-      <button onclick="window.location.href='/logout-admin'" style="background: #007bff; padding: 10px;">Logout Admin</button>
+      <div class="dashboard-container">
+        <h2>Admin Dashboard</h2>
+        <div class="user-list">
+          ${users.map(user => `
+            <div class="user-card" id="user-${user}">
+              <p><strong>${user}</strong></p>
+              <button onclick="logoutUser('${user}')">Logout</button>
+            </div>
+          `).join("")}
+        </div>
+        <button class="logout-btn" onclick="window.location.href='/logout-admin'">Logout Admin</button>
+      </div>
 
       <div id="popup"></div>
 

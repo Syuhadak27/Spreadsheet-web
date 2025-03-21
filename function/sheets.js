@@ -1,5 +1,5 @@
 import { config } from "../config";
-import { getFromKV, saveToKV } from "./cache";
+import { getFromKV, saveToKV, getFromKV_inout, saveToKV_inout, getFromKV_stok, saveToKV_stok, } from "./cache";
 
 export async function getCachedData(env, forceUpdate = false) {
   if (!forceUpdate) {

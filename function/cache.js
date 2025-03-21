@@ -16,9 +16,14 @@ export async function saveToKV(data, env) {
   }
   
   export async function getFromKV_inout(env) {
+    if (!env.DATABASE_CACHE) {
+        console.error("DATABASE_CACHE tidak tersedia!");
+        return null;
+    }
     const data = await env.DATABASE_CACHE.get("inout_cache");
     return data ? JSON.parse(data) : null;
-  }
+}
+
 //============================stok================================================================  
   export async function saveToKV_stok(data, env) {
     await env.DATABASE_CACHE.put("stok_cache", JSON.stringify(data), {
