@@ -307,6 +307,44 @@ document.querySelectorAll('button').forEach(button => {
             }, 500);
           }
 
+          function logoutUser() {
+  const userToLogout = getCookieValue("loggedInUser"); // Ambil user dari cookie
+
+  if (!userToLogout) {
+    alert("Anda belum login!");
+    return;
+  }
+
+  fetch("/logout-user", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user: userToLogout }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.cookie = "loggedInUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        alert("Logout berhasil!");
+        window.location.href = "/"; // Redirect ke halaman utama
+      } else {
+        alert("Gagal logout: " + data.message);
+      }
+    })
+    .catch(error => console.error("Error saat logout:", error));
+}
+
+// Fungsi mendapatkan cookie
+function getCookieValue(cookieName) {
+  const cookies = document.cookie.split("; ");
+  for (let cookie of cookies) {
+    const [name, value] = cookie.split("=");
+    if (name === cookieName) return value;
+  }
+  return null;
+}
+   document.getElementById("currentDomain").textContent = window.location.hostname;  
+   
+
 
 // Jalankan saat halaman dimuat
 window.onload = updateTimestamp;

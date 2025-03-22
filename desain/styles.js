@@ -93,6 +93,13 @@ export const styles = `
           text-align: right;
           color: #666;
         }
+        loged {
+          font-size: 12px;
+          margin-top: 6px;
+          padding: 5px 0;
+          text-align: center;
+          color: #666;
+        }
 
 
 
@@ -194,6 +201,7 @@ button.active {
 /* Warna latar tab */
 .btn-clear { background: #ffcccb; color: #8b0000; }
 .btn-download { background:rgba(7, 120, 248, 0.86); color:rgb(210, 211, 218); }
+.btn-logout { background:rgba(236, 3, 3, 0.86); color:rgb(210, 211, 218); }
 .btn-search { background: #90ee90; color: #006400; }
 .btn-inout { background: #ffd700; color: #b8860b; }
 .btn-export { background: #add8e6; color: #00008b; }

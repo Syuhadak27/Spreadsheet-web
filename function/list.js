@@ -1,5 +1,4 @@
-import { getFromKV, saveToKV } from "./cache";
-import { getCachedData } from "./sheets";
+import { getFromKV, saveToKV, getCachedData } from "./search";
 import { styles } from "./func_style";
 
 export async function handleSearch_list(request, env) {

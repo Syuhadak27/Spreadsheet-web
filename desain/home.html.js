@@ -18,8 +18,10 @@ export function homeTemplate(styles, scripts) {
           <div class="banner">
             <div id="digitalClock" class="clock-container"></div>
             <marquee id="marqueeText" behavior="scroll" direction="left">
-              ✔️ Terhubung langsung ke Google Sheets! ⚡ Cepat & responsif dalam pencarian data!
-              📊 Data selalu up-to-date! 🔄 Sinkronisasi otomatis dengan Google Sheets! 🚀 Performa tinggi, hemat waktu!
+              ✔️ Terhubung langsung ke Google Sheets! ⚡ Pencarian data cepat & responsif! 
+              📊 Data selalu up-to-date! 🔄 Sinkronisasi otomatis dengan Google Sheets! 
+              📨 Semua aktivitas direkam dan dikirim ke channel Telegram! 
+              🌐 Akses data di mana saja, kapan saja!
                
             </marquee>
           </div>
@@ -28,6 +30,8 @@ export function homeTemplate(styles, scripts) {
           <form id="searchForm">
             <div class="search-container">
               <input type="text" id="queryInput" placeholder="Masukkan Nama Barang..." required>
+              
+            
               
             </div>
             <div class="btn-container">
@@ -54,67 +58,44 @@ export function homeTemplate(styles, scripts) {
           <div id="searchResults"></div>
   
           <!-- Container untuk hasil pencarian Bing -->
-          <button type="button" class="btn-clear" onclick="hapusGambar(); setActiveTab(this)">Close Img</button><button type="button" class="btn-download" onclick="window.location.href='https://ouo.io/yi0jaiJ'; setActiveTab(this)">Download</button><button type="button" class="btn-download" onclick="logoutUser()">Logout</button>
+          <button type="button" class="btn-clear" onclick="hapusGambar(); setActiveTab(this)">Close Img</button><button type="button" class="btn-download" onclick="window.location.href='https://ouo.io/yi0jaiJ'; setActiveTab(this)">Download</button><button type="button" class="btn-logout" onclick="logoutUser()">Logout</button>
 
 
           <div id="bingContainer" class="bing-container" style="display: none;"> 
+          
+
+
           </div>
-  
           <footer>
             <p>&copy; 2025 - Dibuat oleh 🤖Ai.Syd.Gle.inc</p>
             <p id="lastUpdated">🔄 Terakhir diperbarui: -</p>
-            
+            <time>
+              <p>Login: <span id="loggedInUser" class="blink">Guest</span></p>
+            </time>
           </footer>
         </div>
         <footer>
           
           <p><i>&copy; 2025 - Dibuat dengan ❤️ oleh M. Alfi Syuhadak</i></p>          
            <p>🌐<span id="currentDomain"></span></p>
-         
+
+                    
         </footer>
+        
+        
+          
+
+
   
         <script>
           ${scripts}
-          document.getElementById("currentDomain").textContent = window.location.hostname;  
+          function getCookieValue(name) {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? match[2] : "Guest";
+            }
+
+            document.getElementById("loggedInUser").textContent = getCookieValue("loggedInUser");
           
-          // Fungsi logout user
-function logoutUser() {
-  const userToLogout = getCookieValue("loggedInUser"); // Ambil user dari cookie
-
-  if (!userToLogout) {
-    alert("Anda belum login!");
-    return;
-  }
-
-  fetch("/logout-user", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ user: userToLogout }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        document.cookie = "loggedInUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        alert("Logout berhasil!");
-        window.location.href = "/"; // Redirect ke halaman utama
-      } else {
-        alert("Gagal logout: " + data.message);
-      }
-    })
-    .catch(error => console.error("Error saat logout:", error));
-}
-
-// Fungsi mendapatkan cookie
-function getCookieValue(cookieName) {
-  const cookies = document.cookie.split("; ");
-  for (let cookie of cookies) {
-    const [name, value] = cookie.split("=");
-    if (name === cookieName) return value;
-  }
-  return null;
-}
-
-
         </script>
       </body>
       </html>

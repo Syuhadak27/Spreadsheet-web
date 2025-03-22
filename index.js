@@ -5,7 +5,7 @@ import { notFound } from "./routes";
 import { handleSearch_list } from "./function/list";
 import { resetSemuaCache } from "./function/reset";
 import { handleSearch_stok } from "./function/stok";
-import { loginPage, adminDashboard, getCookieValue } from "./admin";
+import { loginPage, adminDashboard, getCookieValue, handleAdminLogs } from "./admin";
 import { config } from "./config";
 import { handleAdminAuth } from "./admin_login";
 
@@ -20,6 +20,30 @@ export default {
     const loggedInUser = getCookieValue(cookie, "loggedInUser");
     const adminResponse = handleAdminAuth(request);
     if (adminResponse.status !== 404) return adminResponse;
+
+    // Tambahkan endpoint untuk admin-logs
+if (url.pathname === "/admin-logs") {
+  if (loggedInUser !== "admin") {
+    return new Response("Akses ditolak!", { status: 403 });
+  }
+  
+  return handleAdminLogs(env);
+}
+
+    // ✅ Endpoint untuk menghapus semua log
+    if (url.pathname === "/admin-logs-delete") {
+      if (loggedInUser !== "admin") {
+         return new Response("Akses ditolak!", { status: 403 });
+      }
+
+      const logs = await env.LOG_STORAGE.list();
+      for (const log of logs.keys) {
+         await env.LOG_STORAGE.delete(log.name);
+      }
+
+         return new Response("Semua log telah dihapus!", { status: 200 });
+    }
+
 
 
     // **🔹 Endpoint untuk login user**
@@ -49,81 +73,79 @@ export default {
       });
     }
     
-    if (url.pathname === "/logout-user" && request.method === "POST") {
-  try {
-    const formData = await request.json();
-    const userToLogout = formData.user;
+    // **🔹 Endpoint untuk login admin**
+if (url.pathname === "/login-admin") {
+    const username = url.searchParams.get("username");
+    const password = url.searchParams.get("password");
 
-    if (!userToLogout) {
-      return new Response(JSON.stringify({ success: false, message: "User tidak ditemukan" }), {
-        headers: { "Content-Type": "application/json" },
-        status: 400,
-      });
+    if (username !== adminCredentials.username || password !== adminCredentials.password) {
+        return new Response("Login admin gagal!", { status: 403 });
     }
 
-    await env.DATABASE_CACHE.delete(`user-${userToLogout}`);
+    // Simpan session admin ke KV dengan masa berlaku 1 jam
+    await env.DATABASE_CACHE.put(`user-admin`, "active", { expirationTtl: 3600 });
 
-    return new Response(JSON.stringify({ success: true, message: "Logout berhasil" }), {
-      headers: { "Content-Type": "application/json" },
+    return new Response("Admin login berhasil", {
+        headers: {
+            "Set-Cookie": "loggedInUser=admin; path=/; HttpOnly; Max-Age=3600;",
+        },
     });
-  } catch (error) {
-    return new Response(JSON.stringify({ success: false, message: "Terjadi kesalahan saat logout" }), {
-      headers: { "Content-Type": "application/json" },
-      status: 500,
-    });
-  }
 }
 
-    // **🔹 Endpoint untuk login admin**
-    if (url.pathname === "/login-admin") {
-      const username = url.searchParams.get("username");
-      const password = url.searchParams.get("password");
-
-      if (username !== adminCredentials.username || password !== adminCredentials.password) {
-        return new Response("Login admin gagal!", { status: 403 });
-      }
-
-      return new Response("Admin login berhasil", {
-        headers: {
-          "Set-Cookie": "loggedInUser=admin; path=/;",
-        },
-      });
-    }
-
     // **🔹 Endpoint untuk logout user**
-    if (url.pathname === "/logout-user") {
-      const userToLogout = url.searchParams.get("user");
-      if (!userToLogout) {
-        return new Response("User tidak ditemukan", { status: 400 });
-      }
+if (url.pathname === "/logout-user") {
+    const cookie = request.headers.get("Cookie") || "";
+    const loggedInUser = getCookieValue(cookie, "loggedInUser"); // Ambil user dari cookie
+    const userToLogout = url.searchParams.get("user") || loggedInUser; // Prioritaskan query, fallback ke cookie
 
-      // **Hapus session ID user dari cache**
-      await env.DATABASE_CACHE.delete(`user-${userToLogout}`);
-
-      return new Response(JSON.stringify({ success: true, user: userToLogout, message: `Logout berhasil` }), {
-        headers: { "Content-Type": "application/json" },
-      });
+    if (!userToLogout) {
+        return new Response(JSON.stringify({ success: false, message: "User tidak ditemukan" }), {
+            headers: { "Content-Type": "application/json" },
+            status: 400,
+        });
     }
+
+    // **Hapus session ID user dari cache**
+    await env.DATABASE_CACHE.delete(`user-${userToLogout}`);
+
+    return new Response(JSON.stringify({ success: true, user: userToLogout, message: `Logout berhasil` }), {
+        headers: {
+            "Content-Type": "application/json",
+            "Set-Cookie": "loggedInUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;", // Hapus cookie
+            
+        },
+    });
+}
 
     // **🔹 Admin Dashboard**
-    if (url.pathname === "/admin-dashboard") {
-      if (loggedInUser !== "admin") {
-        return new Response("Akses ditolak! Hanya admin yang bisa mengakses halaman ini.", { status: 403 });
-      }
+if (url.pathname === "/admin-dashboard") {
+    let adminSession = await env.DATABASE_CACHE.get(`user-admin`);
 
-      const keys = await env.DATABASE_CACHE.list();
-      const users = keys.keys.filter(k => k.name.startsWith("user-")).map(k => k.name.replace("user-", ""));
-
-      return new Response(adminDashboard(users), { headers: { "Content-Type": "text/html" } });
+    // Jika session tidak ada tapi cookie masih "admin", anggap login valid
+    if (!adminSession && loggedInUser === "admin") {
+        await env.DATABASE_CACHE.put(`user-admin`, "active", { expirationTtl: 3600 });
+        adminSession = "active";
     }
+
+    if (!adminSession || loggedInUser !== "admin") {
+        return new Response("Akses ditolak! Hanya admin yang bisa mengakses halaman ini.", { status: 403 });
+    }
+
+    const keys = await env.DATABASE_CACHE.list();
+    const users = keys.keys.filter(k => k.name.startsWith("user-")).map(k => k.name.replace("user-", ""));
+
+    return new Response(adminDashboard(users, env), { headers: { "Content-Type": "text/html" } });
+}
 
     // **🔹 Logout Admin**
     if (url.pathname === "/logout-admin") {
+      await env.DATABASE_CACHE.delete(`user-admin`);
+
       return new Response("Admin telah logout", {
-        headers: {
-          "Set-Cookie": "loggedInUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;",
-          "Location" : "/"
-        },
+         headers: {
+           "Set-Cookie": "loggedInUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;",
+           "Location": "/"
+         },
       });
     }
 

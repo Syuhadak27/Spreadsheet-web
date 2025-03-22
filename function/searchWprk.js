@@ -43,63 +43,60 @@ export async function getCachedData(env, forceUpdate = false) {
 
 //=============main fungsi=================
 export async function handleSearch(request, env) {
-  const url = new URL(request.url);
-  const query = url.searchParams.get("query");
+    const url = new URL(request.url);
+    const query = url.searchParams.get("query");
 
-  if (!query) 
-      return new Response("<p style='color: red;'>❌ Masukkan query!</p>", { status: 400 });
+    if (!query) 
+        return new Response("<p style='color: red;'>❌ Masukkan query!</p>", { status: 400 });
 
-  // Ambil data dari cache atau Sheets jika cache kosong
-  let data = await getCachedData(env); 
+    // 🔹 Rekam log pencarian sebelum diproses
+    await logSearch(env, request, query);
+    //event.waitUntil(logSearch(env, request, query));
 
-  const keywords = query.toLowerCase().split(" ");
-  const results = data.filter(row =>
-      keywords.every(keyword => row.some(cell => String(cell).toLowerCase().includes(keyword)))
-  );
+    let data = await getCachedData(env); // Ambil data dari cache atau Sheets jika cache kosong
 
-  let resultHtml = `<style>${styles}</style>
-      <div class="results">`;
+    const keywords = query.toLowerCase().split(" ");
+    const results = data.filter(row =>
+        keywords.every(keyword => row.some(cell => String(cell).toLowerCase().includes(keyword)))
+    );
 
-  if (results.length === 0) {
-      resultHtml += "<p style='color: red;'>❌ Tidak ada hasil ditemukan.</p>";
-  } else {
-      resultHtml += `<table class="search-table">
-                      <thead>
-                          <tr>
-                              <th>Nama Barang</th>
-                              <th>Sales</th>
-                              <th>Stok</th>
-                              <th>Kode</th>
-                              <th>Harga</th>
-                          </tr>
-                      </thead>
-                      <tbody>`;
+    let resultHtml = `<style>${styles}</style>
+        <div class="results">`;
 
-      results.forEach(row => {
-          resultHtml += `
-          <tr>
-              <td ondblclick="insertToSearch('${row[1]}')"><b>${row[1]}</b></td>
-              <td>${row[0]}</td>
-              <td>${row[2]}</td>
-              <td>${row[3]}</td>
-              <td>${row[4]}</td>
-          </tr>`;
-      });
+    if (results.length === 0) {
+        resultHtml += "<p style='color: red;'>❌ Tidak ada hasil ditemukan.</p>";
+    } else {
+        resultHtml += `<table class="search-table">
+                        <thead>
+                            <tr>
+                                <th>Nama Barang</th>
+                                <th>Sales</th>
+                                <th>Stok</th>
+                                <th>Kode</th>
+                                <th>Harga</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
 
-      resultHtml += `</tbody></table>`;
-  }
-  resultHtml += "</div>";
-  
-  // Kirim hasil pencarian terlebih dahulu
-  const response = new Response(resultHtml, {
-      headers: { "Content-Type": "text/html" },
-  });
+        results.forEach(row => {
+            resultHtml += `
+            <tr>
+                <td ondblclick="insertToSearch('${row[1]}')"><b>${row[1]}</b></td>
+                <td>${row[0]}</td>
+                <td>${row[2]}</td>
+                <td>${row[3]}</td>
+                <td>${row[4]}</td>
+            </tr>`;
+        });
 
-  await logSearch(env, request, query);
+        resultHtml += `</tbody></table>`;
+    }
+    resultHtml += "</div>";
 
-  return response;
+    return new Response(resultHtml, {
+        headers: { "Content-Type": "text/html" },
+    });
 }
-
 
 //========reset==============================================
 export async function resetCacheUtama(env) {
@@ -133,7 +130,4 @@ export async function resetCacheUtama(env) {
     return "Gagal mereset cache utama.";
   }
 }
-
-
-
 
